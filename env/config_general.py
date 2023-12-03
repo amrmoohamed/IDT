@@ -1,9 +1,9 @@
 step_reward = -1
 passenger_not_at_loc_reward = -10
 wrong_drop_reward = -10
-no_move_reward = -10
+no_move_reward = 0
 end_of_episode_reward = 20
-illegal_action_reward = -10
+illegal_action_reward = 0
 
 Matrix = [[-4.9397, -4.939, -4.939, -4.939, -4.939],
           [-4.524, -4.524, -4.524, -4.202, -4.524],
@@ -11,7 +11,7 @@ Matrix = [[-4.9397, -4.939, -4.939, -4.939, -4.939],
           [-4.939, -4.524, -4.524, -4.524, -4.524],
           [-5.524, -4.939, -4.939, -4.939, -4.939]]
 # Approaches are [Baseline1 test 1	Baseline2	test2	test3	test4]
-approach = "Baseline2"
+approach = "Baseline1"
 mapp = '5X5'
 # Matrix = [[-9.6474584, -7.0624959, -7.0624959, -7.0624959,x    -7.6474584, -7.0624959, -7.0624959, -7.0624959, -7.0624959, -9.6474584],
 # [-7.0624959, -6.6474584, -6.6474584, -7.0624959, -7.0624959, -6.6474584, -6.6474584, -6.6474584, -6.6474584, -7.0624959],
