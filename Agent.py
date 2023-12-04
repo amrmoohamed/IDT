@@ -103,7 +103,7 @@ class Agent():
                 # print(new_value)
                 self.q_table[state, action] = new_value
 
-                if reward < 0: # Checks if agent attempted to do an illegal action.
+                if reward == config.passenger_not_at_loc_reward or reward == config.wrong_drop_reward or reward == config.illegal_action_reward: # Checks if agent attempted to do an illegal action.
                     penalties += 1
 
                 state = next_state

@@ -63,13 +63,17 @@ class env(Env):
                             #         config.Matrix[new_row][new_col]
                             #     )  # default reward when there is no pickup/dropoff
                             terminated = False
-                            reward, new_row, new_col, new_pass_idx = self.calculate_reward(action, row, col, pass_idx, dest_idx)
-
+                            #print(f"row is {row}, col is {col}, pass idx is {pass_idx}, dest idx is {dest_idx}, action is {action}")
+                            terminated, reward, new_row, new_col, new_pass_idx = self.calculate_reward(terminated, action, row, col, pass_idx, dest_idx)
+                            #print(f"reward is {reward}, new row is {new_row}, new col is {new_col}, new pass idx is {new_pass_idx}")
+                            #print(reward, new_row, new_col, new_pass_idx,action)
                             # if new_row == row and new_col == col:
                             #     reward = config.no_move_reward
                             #action_mask = self.action_mask(state)
                             # if action_mask[action]==0:
                             #     reward = config.illegal_action_reward
+
+                            #action_mask = self.action_mask(state)
                             new_state = self.encode(
                                 new_row, new_col, new_pass_idx, dest_idx
                             )
@@ -100,21 +104,29 @@ class env(Env):
     
 
 
-    def calculate_reward(self, action, row, col, pass_idx, dest_idx):
+    def calculate_reward(self, terminated, action, row, col, pass_idx, dest_idx):
         # defaults
         new_row, new_col, new_pass_idx = row, col, pass_idx
         taxi_loc = (row, col)
-        reward = 'no_reward'
+        #reward = 'no_reward'
+        if (config.approach == 'test2' or config.approach == 'test4' or config.approach == 'test6'):
+            reward = (config.Matrix[new_row][new_col])
+        else:
+            reward = (config.step_reward)
+
+        
+        # if config.illegal_action_reward == 0:
+        #     config.illegal_action_reward = config.step_reward
 
         if action == 0: # move south
-            if self.desc[1 + row, 2 * col + 1] != b"-":
-                new_row = min(row + 1, self.max_row)
-            else:
+            #if self.desc[1 + row, 2 * col + 1] != b"-":
+            new_row = min(row + 1, self.max_row)
+            if new_row == row:
                 reward = config.illegal_action_reward
         elif action == 1: # move north
-            if self.desc[1 + row, 2 * col + 1] != b"-":
-                new_row = max(row - 1, 0)
-            else:
+            #if self.desc[1 + row, 2 * col + 1] != b"-":
+            new_row = max(row - 1, 0)
+            if new_row == row:
                 reward = config.illegal_action_reward
         elif action == 2: # move east
             if self.desc[1 + row, 2 * col + 2] == b":":
@@ -129,30 +141,27 @@ class env(Env):
         elif action == 4: # pickup
             if pass_idx < 4 and taxi_loc == self.locs[pass_idx]:
                 new_pass_idx = 4
-                reward = config.step_reward
+                #reward = config.step_reward
             else: # passenger not at location
                 reward = config.passenger_not_at_loc_reward
         elif action == 5: # dropoff
-            if (taxi_loc == self.locs[dest_idx]) and pass_idx == 4:
+            locs_without_destination = [loc for loc in self.locs if self.locs.index(loc) != dest_idx]
+            #print(locs_without_destination)
+            if (taxi_loc == self.locs[dest_idx]) and pass_idx == 4: # Taxi is at destination and Passenger is inside it
                 new_pass_idx = dest_idx
                 terminated = True
                 reward = config.end_of_episode_reward
-            elif (taxi_loc in self.locs) and pass_idx == 4:
+            elif (taxi_loc in locs_without_destination)  and pass_idx == 4: # Taxi is at one of the four locs (not destination) and passenger is inside it 
                 new_pass_idx = self.locs.index(taxi_loc)
-                reward = config.wrong_drop_reward
-            else: # dropoff at wrong location
+                #reward = config.wrong_drop_reward  
+            else: # dropoff at wrong location # won't update passenger index , as the taxi cannot drop off the passenger outside the specfied locations
                 reward = config.wrong_drop_reward
         
-        if reward == 'no_reward' and (new_row != row or new_col != col):
-            if (config.approach == 'test3' or config.approach == 'test4'):
-                reward = (config.Matrix[new_row][new_col])
-            else:
-                reward = (config.step_reward)
-        
-        elif reward == 'no_reward' and (new_row == row and new_col == col):
-            reward = config.illegal_action_reward
+        #if reward == 'no_reward' and (new_row != row or new_col != col):
+        # elif reward == 'no_reward' and (new_row == row and new_col == col):
+        #     reward = config.illegal_action_reward
 
-        return reward, new_row, new_col, new_pass_idx
+        return terminated, reward, new_row, new_col, new_pass_idx
 
 
     def encode(self, taxi_row, taxi_col, pass_loc, dest_idx):
