@@ -1,0 +1,13 @@
+﻿,Option ,Baseline1,test1,test2,Baseline2,test3,test4,Baseline3,test5,test6,Baseline1,test1,test2,Baseline2,test3,test4,Baseline3,test5,test6
+,Grid size,12*10,12*10,12*10,12*10,12*10,12*10,12*10,12*10,12*10,5*5,5*5,5*5,5*5,5*5,5*5,5*5,5*5,5*5
+Rewards,step_reward,-1,-10,-1,-1,-10,-1,-1,-10,-1,-1,-10,-1,-1,-10,-1,-1,-10,-1
+,passenger_not_at_loc_reward,-10,-100,-100,-10,-100,-100,-10,-100,-100,-10,-100,-100,-10,-100,-100,-10,-100,-100
+,wrong_drop_reward,-10,-100,-100,-10,-100,-100,-10,-100,-100,-10,-100,-100,-10,-100,-100,-10,-100,-100
+,end_of_episode_reward,20,200,200,20,200,200,20,200,200,20,200,200,20,200,200,20,200,200
+,illegal_action_reward,0,0,0,-1,-10,-10,-10,-100,-100,0,0,0,-1,-10,-10,-10,-100,-100
+Performance,Average timesteps per episode (All),,,,,,,,,,,,,,,,,,
+,Average timesteps per episode(sucessful),,,,,,,,,,,,,,,,,,
+,Average penalties per episode (All),,,,,,,,,,,,,,,,,,
+,Average penalties per episode (sucessful),,,,,,,,,,,,,,,,,,
+,Entropy of the Q table,,,,,,,,,,,,,,,,,,
+,Sucess rate,,,,,,,,,,,,,,,,,,

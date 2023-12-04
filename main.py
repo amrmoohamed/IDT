@@ -18,7 +18,6 @@ def optuna_search(trial):
         return SR
     else:
         return 0
-    
 
 if __name__ == '__main__':
     if config.search_flag:

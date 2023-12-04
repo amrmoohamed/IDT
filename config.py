@@ -16,7 +16,7 @@ env = env
 training_episodes = 10000 # Amount of times to run environment while training.
 display_episodes = 10 # Amount of times to run environment after training.
 test_episodes = 1000
-train_flag = True
+train_flag = config_general.train_flag
 display_flag = False
 search_flag = False
 # Hyperparameters
@@ -26,7 +26,7 @@ epsilon = 0.1 # Chance of selecting a random action instead of maximising reward
 early_stop_condition = 10
 #approach to use 
 #values are 'normal','one','two','three'
-mapp = '5X5' #'12X10'
+mapp = config_general.mapp #'5X5' #'12X10'
 approach = config_general.approach
 Matrix = config_general.Matrix
 #illegal_pen = config_general.illegal_action_reward
