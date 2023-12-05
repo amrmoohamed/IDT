@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd 
 import configparser
 import subprocess
+import importlib
+
 
 def remove_default_value(config_general,path):
     # Save the modified configuration files
@@ -88,35 +90,51 @@ for scenario in df.columns:
     illegal_action_reward = int(df[scenario]['illegal_action_reward'])
     config_general['DEFAULT']['illegal_action_reward'] = str(illegal_action_reward)
     #print(illegal_action_reward)
-    mapp = str(df[scenario]['Grid size'])
+    #mapp = repr(df[scenario]['Grid size'])
+    mapp = repr(df[scenario]['Grid size']).replace('*', 'X')
+
     #print(mapp)
     config_general['DEFAULT']['mapp'] = mapp
+
     try:
-        scenario = str(scenario.split('.')[0])
+        scenario = repr(scenario.split('.')[0])
     except:
         pass
     #print(scenario)
     config_general['DEFAULT']['approach'] = scenario
 
+    try:
+        scenario = str(scenario.split('.')[0])
+    except:
+        pass
+    
+    #mapp = (df[scenario]['Grid size']).replace('*', 'X')
+    mapp = mapp.replace("'", "")
+    # config_name = f'env.config_{mapp}'
+    # module = importlib.import_module(config_name)
+    # matrix = module.matrix
 
-
+    # config_general['DEFAULT']['matrix'] = repr(matrix)
 
     # Run the main function in train mode
     config_general['DEFAULT']['train_flag'] = 'True'
-
-    # Run the main function in train mode
+    # Save the modified configuration files
+    with open('env/config_general.py', 'w') as configfile:
+        config_general.write(configfile)
     remove_default_value(config_general,'env/config_general.py')
+
     print(f"Training Scenario {scenario} in map {mapp}")
     subprocess.run(['python', 'main.py'])
 
     # Run the main function in test mode
     config_general['DEFAULT']['train_flag'] = 'False'
-
     # Save the modified configuration files
     with open('env/config_general.py', 'w') as configfile:
         config_general.write(configfile)
-
-    # Run the main function in test mode
     remove_default_value(config_general,'env/config_general.py')
+
     print(f"Testing Scenario {scenario} in map {mapp}")
     subprocess.run(['python', 'main.py'])
+
+    
+    

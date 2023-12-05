@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from scipy.special import entr
 from utils import clear,calculate_entropy,save_training_progress,early_stop,report
 import config
+import env.config_general as config_general
 import time
 import cv2
 import os
@@ -103,7 +104,7 @@ class Agent():
                 # print(new_value)
                 self.q_table[state, action] = new_value
 
-                if reward == config.passenger_not_at_loc_reward or reward == config.wrong_drop_reward or reward == config.illegal_action_reward: # Checks if agent attempted to do an illegal action.
+                if reward == config_general.passenger_not_at_loc_reward or reward == config_general.wrong_drop_reward or reward == config_general.illegal_action_reward: # Checks if agent attempted to do an illegal action.
                     penalties += 1
 
                 state = next_state

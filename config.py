@@ -1,11 +1,11 @@
 import time
 import gym
-from env.new_env import new_env
-from env.new_env2 import new_env2
-from env.big_env import big_env
-from env.hor_env import hor_env
-from env.hor_env2 import hor_env2
-from env.original_env import original_env
+# from env.new_env import new_env
+# from env.new_env2 import new_env2
+# from env.big_env import big_env
+# from env.hor_env import hor_env
+# from env.hor_env2 import hor_env2
+# from env.original_env import original_env
 from env.env import env
 from env import config_general
 import numpy as np
@@ -28,7 +28,7 @@ early_stop_condition = 10
 #values are 'normal','one','two','three'
 mapp = config_general.mapp #'5X5' #'12X10'
 approach = config_general.approach
-Matrix = config_general.Matrix
+#matrix = config_general.matrix
 #illegal_pen = config_general.illegal_action_reward
 q_table_DIR = f"Q_tables/map_{mapp}_{approach}.npy"
 results_DIR = f"results/map_{mapp}_{approach}.xlsx"

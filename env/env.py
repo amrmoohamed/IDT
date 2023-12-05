@@ -11,7 +11,7 @@ from gym.envs.toy_text.utils import categorical_sample
 from gym.error import DependencyNotInstalled
 
 from env import config_5X5 as env_config
-from env import config_10X12 as env_config_big
+from env import config_12X10 as env_config_big
 import sys
 from env import config_general as config
 
@@ -29,6 +29,8 @@ class env(Env):
             self.env_config = env_config
         elif self.mapp == '12X10':
             self.env_config = env_config_big
+        
+        self.matrix = self.env_config.matrix
         
         self.desc = np.asarray(self.env_config.MAP, dtype="c")
         self.locs = locs = self.env_config.locs
@@ -110,7 +112,7 @@ class env(Env):
         taxi_loc = (row, col)
         #reward = 'no_reward'
         if (config.approach == 'test2' or config.approach == 'test4' or config.approach == 'test6'):
-            reward = (config.Matrix[new_row][new_col])
+            reward = (self.matrix[new_row][new_col])
         else:
             reward = (config.step_reward)
 
@@ -166,9 +168,9 @@ class env(Env):
 
     def encode(self, taxi_row, taxi_col, pass_loc, dest_idx):
         i = taxi_row
-        i *= env_config.row_encoding
+        i *= self.env_config.row_encoding
         i += taxi_col
-        i *= env_config.col_encoding
+        i *= self.env_config.col_encoding
         i += pass_loc
         i *= 4
         i += dest_idx
@@ -177,24 +179,24 @@ class env(Env):
     def decode(self, i):
         out = []
         out.append(i % 4)
-        i = i // 4
-        out.append(i % env_config.col_encoding)
-        i = i // env_config.col_encoding
-        out.append(i % env_config.row_encoding)
-        i = i // env_config.row_encoding
+        i = i // 4 
+        out.append(i % self.env_config.col_encoding)
+        i = i // self.env_config.col_encoding
+        out.append(i % self.env_config.row_encoding)
+        i = i // self.env_config.row_encoding
         out.append(i)
-        assert 0 <= i < env_config.decode_assertion
+        assert 0 <= i < self.env_config.decode_assertion
         return reversed(out)
 
     def action_mask(self, state: int):
         """Computes an action mask for the action space using the state information."""
         mask = np.zeros(6, dtype=np.int8)
         taxi_row, taxi_col, pass_loc, dest_idx = self.decode(state)
-        if taxi_row < env_config.row_encoding-1:
+        if taxi_row < self.env_config.row_encoding-1:
             mask[0] = 1
         if taxi_row > 0:
             mask[1] = 1
-        if taxi_col < env_config.row_encoding-1 and self.desc[taxi_row + 1, 2 * taxi_col + 2] == b":":
+        if taxi_col < self.env_config.row_encoding-1 and self.desc[taxi_row + 1, 2 * taxi_col + 2] == b":":
             mask[2] = 1
         if taxi_col > 0 and self.desc[taxi_row + 1, 2 * taxi_col] == b":":
             mask[3] = 1
